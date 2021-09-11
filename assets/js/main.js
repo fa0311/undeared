@@ -1,138 +1,132 @@
-window.addEventListener("DOMContentLoaded", main);
+class mainClass {
+    constructor() {
+        /* 定義 */
+        this.canvas = document.querySelector("#canvas");
+        this.renderer = new THREE.WebGLRenderer({
+            canvas: this.canvas
+        });
+        this.eventset();
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-function main() {
-    /* 定義 */
-    const width = 1920;
-    const height = 1080;
-    const canvas = document.querySelector("#canvas");
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(
+            45,
+            0,
+            1,
+            1000
+        );
+        this.resizefunc();
+        this.camera.y_speed = 0;
+        this.camera.position.set(0, 100, 0);
 
-    const renderer = new THREE.WebGLRenderer({
-        canvas: canvas
-    });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(width, height);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-        45,
-        width / height,
-        1,
-        1000
-    );
-    camera.y_speed = 0;
-    camera.position.set(0, 100, 0);
-
-    const target = new THREE.Group();
-    scene.add(target);
-    const bullet = new THREE.Group();
-    scene.add(bullet);
-    const eventobj = new THREE.Group();
-    scene.add(eventobj);
-    // 廊下
-    const corridor = new THREE.Group();
-    mapset_corridor(corridor);
-    scene.add(corridor);
-    // 部屋
-    const room = new THREE.Group();
-    scene.add(room);
-    // 当たり判定 壁
-    const wall = new THREE.Group();
-    mapset_wall(wall);
-    scene.add(wall);
-    // 当たり判定 床
-    const floor = new THREE.Group();
-    mapset_floor(floor);
-    scene.add(floor);
-
-    eventset(canvas);
+        this.target = new THREE.Group();
+        this.scene.add(this.target);
+        this.bullet = new THREE.Group();
+        this.scene.add(this.bullet);
+        this.eventobj = new THREE.Group();
+        this.scene.add(this.eventobj);
+        // 廊下
+        this.corridor = new THREE.Group();
+        mapset_corridor(this.corridor);
+        this.scene.add(this.corridor);
+        // 部屋
+        this.room = new THREE.Group();
+        this.scene.add(this.room);
+        // 当たり判定 壁
+        this.wall = new THREE.Group();
+        mapset_wall(this.wall);
+        this.scene.add(this.wall);
+        // 当たり判定 床
+        this.floor = new THREE.Group();
+        mapset_floor(this.floor);
+        this.scene.add(this.floor);
 
 
-    /*
+        /*
 
-    const loader1 = new THREE.OBJLoader();
-    loader1.load('assets/models/Colt_obj/Colt.obj', function(object) {
-        gun = object;
-        scene.add(gun);
-    });
+        const loader1 = new THREE.OBJLoader();
+        loader1.load('assets/models/Colt_obj/Colt.obj', function(object) {
+            gun = object;
+            this.scene.add(gun);
+        });
+            */
+
+        /*
+        銃関連
+
+        let gun;
+        let clock = new THREE.Clock();
+        var action;
+        const loader = new THREE.FBXLoader();
+        console.log(loader);
+        loader.resourcePath = 'assets/models/ar15/textures/ar15_Material_BaseColor.tga.png';
+        loader.load('assets/models/ar15/source/ar15.fbx', function(object) {
+            gun = object;
+            gun.scale.set(0.02, 0.02, 0.02);
+            console.log(object);
+            playerdata.animationReload = new THREE.AnimationMixer(object);
+            action = playerdata.animationReload.clipAction(object.animations[2]);
+
+            this.scene.add(gun);
+
+        });
         */
 
-    /*
-    銃関連
-
-    let gun;
-    let clock = new THREE.Clock();
-    var action;
-    const loader = new THREE.FBXLoader();
-    console.log(loader);
-    loader.resourcePath = 'assets/models/ar15/textures/ar15_Material_BaseColor.tga.png';
-    loader.load('assets/models/ar15/source/ar15.fbx', function(object) {
-        gun = object;
-        gun.scale.set(0.02, 0.02, 0.02);
-        console.log(object);
-        playerdata.animationReload = new THREE.AnimationMixer(object);
-        action = playerdata.animationReload.clipAction(object.animations[2]);
-
-        scene.add(gun);
-
-    });
-    */
 
 
 
+        var texture = new THREE.TextureLoader().load('assets/image/fa0311/icon.jpg',
+            (tex) => {
+                const w = 50;
+                const h = tex.image.height / (tex.image.width / w);
 
-    var texture = new THREE.TextureLoader().load('assets/image/fa0311/icon.jpg',
-        (tex) => {
-            const w = 50;
-            const h = tex.image.height / (tex.image.width / w);
-
-            const geometry = new THREE.PlaneGeometry(1, 1);
-            const material = new THREE.MeshPhongMaterial({
-                map: texture
+                const geometry = new THREE.PlaneGeometry(1, 1);
+                const material = new THREE.MeshPhongMaterial({
+                    map: texture
+                });
+                const plane = new THREE.Mesh(geometry, material);
+                plane.scale.set(w, h, 1);
+                plane.position.set(0, 100, 500);
+                plane.rotation.y = 3.14;
+                plane.event = function(camera) {
+                    let _euler = new THREE.Euler(0, 0, 0, 'YXZ');
+                    _euler.setFromQuaternion(camera.quaternion);
+                    if (Math.abs(_euler.y) > 3)
+                        this.position.z -= 15;
+                }
+                this.eventobj.add(plane);
             });
-            const plane = new THREE.Mesh(geometry, material);
-            plane.scale.set(w, h, 1);
-            plane.position.set(0, 100, 500);
-            plane.rotation.y = 3.14;
-            plane.event = function(camera) {
-                let _euler = new THREE.Euler(0, 0, 0, 'YXZ');
-                _euler.setFromQuaternion(camera.quaternion);
-                if (Math.abs(_euler.y) > 3)
-                    this.position.z -= 15;
-            }
-            eventobj.add(plane);
+
+        /*
+
+        var audioLoader = new THREE.AudioLoader();
+        var listener = new THREE.AudioListener();
+        var audio = new THREE.Audio(listener);
+        audioLoader.load('assets/sounds/submachine_gun.mp3', function(buffer) {
+            audio.setBuffer(buffer);
         });
+        */
 
-    /*
+        this.light = new THREE.SpotLight(0xFFFFFF, 0.5, 400, Math.PI / 5, 0.5, 0.99);
+        //                      SpotLight(色      強度, 距離, 角度      ,半影,減衰）
+        // const light = new THREE.SpotLight(0xFFFFFF, 1, 600, Math.PI, 10, 0.9);
+        this.light.castShadow = true;
+        this.light.shadow.mapSize.width = 2048;
+        this.light.shadow.mapSize.height = 2048;
+        this.scene.add(this.light);
+        this.light_target = new THREE.Mesh(new THREE.BoxGeometry(0, 0, 0), new THREE.MeshStandardMaterial());
+        this.scene.add(this.light_target);
+        this.light.target = this.light_target;
 
-    var audioLoader = new THREE.AudioLoader();
-    var listener = new THREE.AudioListener();
-    var audio = new THREE.Audio(listener);
-    audioLoader.load('assets/sounds/submachine_gun.mp3', function(buffer) {
-        audio.setBuffer(buffer);
-    });
-    */
-
-    const light = new THREE.SpotLight(0xFFFFFF, 0.5, 400, Math.PI / 5, 0.5, 0.99);
-    //                      SpotLight(色      強度, 距離, 角度      ,半影,減衰）
-    // const light = new THREE.SpotLight(0xFFFFFF, 1, 600, Math.PI, 10, 0.9);
-    light.castShadow = true;
-    light.shadow.mapSize.width = 2048;
-    light.shadow.mapSize.height = 2048;
-    scene.add(light);
-    let light_target = new THREE.Mesh(new THREE.BoxGeometry(0, 0, 0), new THREE.MeshStandardMaterial());
-    scene.add(light_target);
-    light.target = light_target;
-
-    setTimeout(view, 1000);
-    /*
-        const directional_light = new THREE.DirectionalLight(0xFFFFFF, 1);
-        directional_light.position.set(0, 1000, 1000);
-        scene.add(directional_light);
-    */
-    function view() {
-        requestAnimationFrame(view);
+        setTimeout(render, 1000);
+        /*
+            const directional_light = new THREE.DirectionalLight(0xFFFFFF, 1);
+            directional_light.position.set(0, 1000, 1000);
+            this.scene.add(directional_light);
+        */
+    }
+    view() {
         /*
         銃関連
         if (keydata.reload && playerdata.reload_time == 0) {
@@ -153,15 +147,15 @@ function main() {
         */
 
         // 移動前の座標をキャッシュ
-        playerdata.cache.x = camera.position.x;
-        playerdata.cache.y = camera.position.y;
-        playerdata.cache.z = camera.position.z;
+        playerdata.cache.x = this.camera.position.x;
+        playerdata.cache.y = this.camera.position.y;
+        playerdata.cache.z = this.camera.position.z;
         // 方向による移動量の計算
         let _euler = new THREE.Euler(0, 0, 0, 'YXZ');
-        _euler.setFromQuaternion(camera.quaternion);
+        _euler.setFromQuaternion(this.camera.quaternion);
         _euler.y -= mousedata.x;
         _euler.x = Math.max(Math.PI / 2 - Math.PI, Math.min(Math.PI / 2 - 0, _euler.x - mousedata.y));
-        camera.quaternion.setFromEuler(_euler);
+        this.camera.quaternion.setFromEuler(_euler);
 
         // 移動速度
         if (keydata.shift)
@@ -170,67 +164,67 @@ function main() {
             playerdata.speed = 3;
         // 移動
         if (keydata.up && keydata.right) {
-            camera.position.z -= Math.cos(_euler.y - Math.PI / 2.5) * playerdata.speed;
-            camera.position.x -= Math.sin(_euler.y - Math.PI / 2.5) * playerdata.speed;
+            this.camera.position.z -= Math.cos(_euler.y - Math.PI / 2.5) * playerdata.speed;
+            this.camera.position.x -= Math.sin(_euler.y - Math.PI / 2.5) * playerdata.speed;
         } else if (keydata.up && keydata.left) {
-            camera.position.z += Math.cos(_euler.y - Math.PI / 1.5) * playerdata.speed;
-            camera.position.x += Math.sin(_euler.y - Math.PI / 1.5) * playerdata.speed;
+            this.camera.position.z += Math.cos(_euler.y - Math.PI / 1.5) * playerdata.speed;
+            this.camera.position.x += Math.sin(_euler.y - Math.PI / 1.5) * playerdata.speed;
         } else if (keydata.down && keydata.right) {
-            camera.position.z -= Math.cos(_euler.y - Math.PI / 1.5) * playerdata.speed;
-            camera.position.x -= Math.sin(_euler.y - Math.PI / 1.5) * playerdata.speed;
+            this.camera.position.z -= Math.cos(_euler.y - Math.PI / 1.5) * playerdata.speed;
+            this.camera.position.x -= Math.sin(_euler.y - Math.PI / 1.5) * playerdata.speed;
         } else if (keydata.down && keydata.left) {
-            camera.position.z += Math.cos(_euler.y - Math.PI / 2.5) * playerdata.speed;
-            camera.position.x += Math.sin(_euler.y - Math.PI / 2.5) * playerdata.speed;
+            this.camera.position.z += Math.cos(_euler.y - Math.PI / 2.5) * playerdata.speed;
+            this.camera.position.x += Math.sin(_euler.y - Math.PI / 2.5) * playerdata.speed;
         } else if (keydata.up) {
-            camera.position.z -= Math.cos(_euler.y) * playerdata.speed;
-            camera.position.x -= Math.sin(_euler.y) * playerdata.speed;
+            this.camera.position.z -= Math.cos(_euler.y) * playerdata.speed;
+            this.camera.position.x -= Math.sin(_euler.y) * playerdata.speed;
         } else if (keydata.down) {
-            camera.position.z += Math.cos(_euler.y) * playerdata.speed;
-            camera.position.x += Math.sin(_euler.y) * playerdata.speed;
+            this.camera.position.z += Math.cos(_euler.y) * playerdata.speed;
+            this.camera.position.x += Math.sin(_euler.y) * playerdata.speed;
         } else if (keydata.right) {
-            camera.position.z -= Math.cos(_euler.y - Math.PI / 2) * playerdata.speed;
-            camera.position.x -= Math.sin(_euler.y - Math.PI / 2) * playerdata.speed;
+            this.camera.position.z -= Math.cos(_euler.y - Math.PI / 2) * playerdata.speed;
+            this.camera.position.x -= Math.sin(_euler.y - Math.PI / 2) * playerdata.speed;
         } else if (keydata.left) {
-            camera.position.z += Math.cos(_euler.y - Math.PI / 2) * playerdata.speed;
-            camera.position.x += Math.sin(_euler.y - Math.PI / 2) * playerdata.speed;
+            this.camera.position.z += Math.cos(_euler.y - Math.PI / 2) * playerdata.speed;
+            this.camera.position.x += Math.sin(_euler.y - Math.PI / 2) * playerdata.speed;
         }
 
         // 当たり判定 x軸
 
 
-        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach(function(data_y) {
-            [30, 20, 10, 0, -10, -20, -30].forEach(function(data_x) {
+        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
+            [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
 
-                let TopOverPos = new THREE.Vector3(camera.position.x + Math.abs(data_x), camera.position.y + data_y, camera.position.z + data_x);
+                let TopOverPos = new THREE.Vector3(this.camera.position.x + Math.abs(data_x), this.camera.position.y + data_y, this.camera.position.z + data_x);
                 let downVect = new THREE.Vector3(-1, 0, 0);
                 let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
                 let flag = false;
-                let objs = ray.intersectObjects(wall.children, true);
-                objs.forEach(function(element) {
-                    if (camera.position.x < element.point.x + Math.abs(data_x))
+                let objs = ray.intersectObjects(this.wall.children, true);
+                objs.forEach((element) => {
+                    if (this.camera.position.x < element.point.x + Math.abs(data_x))
                         flag = true;
                 });
                 if (flag)
-                    camera.position.x = playerdata.cache.x;
+                    this.camera.position.x = playerdata.cache.x;
             });
         });
 
         // 当たり判定 z軸
 
-        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach(function(data_y) {
-            [30, 20, 10, 0, -10, -20, -30].forEach(function(data_x) {
+        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
+            [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
 
-                let TopOverPos = new THREE.Vector3(camera.position.x + data_x, camera.position.y + data_y, camera.position.z + Math.abs(data_x));
+                let TopOverPos = new THREE.Vector3(this.camera.position.x + data_x, this.camera.position.y + data_y, this.camera.position.z + Math.abs(data_x));
                 let downVect = new THREE.Vector3(0, 0, -1);
                 let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
                 let flag = false;
-                let objs = ray.intersectObjects(wall.children, true);
-                objs.forEach(function(element) {
-                    if (camera.position.z < element.point.z + Math.abs(data_x))
+                let objs = ray.intersectObjects(this.wall.children, true);
+                objs.forEach((element) => {
+                    if (this.camera.position.z < element.point.z + Math.abs(data_x))
                         flag = true;
                 });
                 if (flag)
-                    camera.position.z = playerdata.cache.z;
+                    this.camera.position.z = playerdata.cache.z;
             });
         });
 
@@ -249,37 +243,37 @@ function main() {
         console.log(gun.point)
         */
         /* 縦方向判定 */
-        let PlayerHeight = camera.position.y - 100;
-        let TopOverPos = new THREE.Vector3(camera.position.x, PlayerHeight + 20, camera.position.z);
+        let PlayerHeight = this.camera.position.y - 100;
+        let TopOverPos = new THREE.Vector3(this.camera.position.x, PlayerHeight + 20, this.camera.position.z);
         let downVect = new THREE.Vector3(0, -1, 0);
         let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
         let preY = PlayerHeight - 5;
-        let objs = ray.intersectObjects(floor.children, true);
+        let objs = ray.intersectObjects(this.floor.children, true);
         objs.forEach(function(element) {
             if (preY < element.point.y)
                 preY = element.point.y;
         });
         /* 接触点 + 身長 */
-        camera.position.y = preY + 100;
+        this.camera.position.y = preY + 100;
 
         // camera.translateOnAxis(new THREE.Vector3(Number(keydata.right) - Number(keydata.left), 0, Number(keydata.down) - Number(keydata.up)), 3);
 
         mousedata.update();
 
-        light.rotation.z = camera.rotation.z;
-        light.rotation.x = camera.rotation.x;
-        light.rotation.y = camera.rotation.y;
-        light.position.z = camera.position.z;
-        light.position.x = camera.position.x;
-        light.position.y = camera.position.y;
+        this.light.rotation.z = this.camera.rotation.z;
+        this.light.rotation.x = this.camera.rotation.x;
+        this.light.rotation.y = this.camera.rotation.y;
+        this.light.position.z = this.camera.position.z;
+        this.light.position.x = this.camera.position.x;
+        this.light.position.y = this.camera.position.y;
         // light.translateOnAxis(new THREE.Vector3(0, -1, 0), 80);
-        light_target.rotation.z = camera.rotation.z;
-        light_target.rotation.x = camera.rotation.x;
-        light_target.rotation.y = camera.rotation.y;
-        light_target.position.z = camera.position.z;
-        light_target.position.x = camera.position.x;
-        light_target.position.y = camera.position.y;
-        light_target.translateOnAxis(new THREE.Vector3(0, 0, -1), 100);
+        this.light_target.rotation.z = this.camera.rotation.z;
+        this.light_target.rotation.x = this.camera.rotation.x;
+        this.light_target.rotation.y = this.camera.rotation.y;
+        this.light_target.position.z = this.camera.position.z;
+        this.light_target.position.x = this.camera.position.x;
+        this.light_target.position.y = this.camera.position.y;
+        this.light_target.translateOnAxis(new THREE.Vector3(0, 0, -1), 100);
 
 
         // console.log("x" + _euler.x + "\n cos" + Math.cos(_euler.x) + "\n sin" + Math.sin(_euler.x) +"\ny" + _euler.y + "\n cos" + Math.cos(_euler.y) + "\n sin" + Math.sin(_euler.y) +"\n" + gun.position.z)
@@ -359,12 +353,91 @@ function main() {
                 element.translateOnAxis(new THREE.Vector3(0, 0, -1), 20);
             });
             */
-        eventobj.children.forEach(function(element) {
-            element.event(camera);
+        this.eventobj.children.forEach((element) => {
+            element.event(this.camera);
         });
-        renderer.render(scene, camera);
+        this.renderer.render(this.scene, this.camera);
+    }
+    eventset() {
+        this.canvas.addEventListener("mousedown", this.mousedownfunk);
+        this.canvas.addEventListener("mouseup", this.mouseupfunc);
+        addEventListener("keydown", this.keydownfunc);
+        addEventListener("keyup", this.keyupfunc);
+        addEventListener("mousemove", this.mousemovefunc);
+        addEventListener('resize', () => this.resizefunc());
+    }
+
+    mousedownfunk(event) {
+        let canvas = event.target;
+        canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
+        canvas.requestPointerLock();
+        if (event.button == 0)
+            mousedata.left = true;
+        else if (event.button == 2)
+            mousedata.right = true;
+    }
+    mouseupfunc(event) {
+        if (event.button == 0)
+            mousedata.left = false;
+        else if (event.button == 2)
+            mousedata.right = false;
+    }
+    keydownfunc(event) {
+        if (event.keyCode == 87)
+            keydata.up = true;
+        else if (event.keyCode == 65)
+            keydata.left = true;
+        else if (event.keyCode == 83)
+            keydata.down = true;
+        else if (event.keyCode == 68)
+            keydata.right = true;
+        else if (event.keyCode == 32)
+            keydata.space = true;
+        else if (event.keyCode == 17)
+            keydata.ctrl = true;
+        else if (event.keyCode == 16)
+            keydata.shift = true;
+        else if (event.keyCode == 82)
+            keydata.reload = true;
+    }
+    keyupfunc(event) {
+        console.log(event);
+        if (event.keyCode == 87)
+            keydata.up = false;
+        else if (event.keyCode == 65)
+            keydata.left = false;
+        else if (event.keyCode == 83)
+            keydata.down = false;
+        else if (event.keyCode == 68)
+            keydata.right = false;
+        else if (event.keyCode == 32)
+            keydata.space = false;
+        else if (event.keyCode == 17)
+            keydata.ctrl = false;
+        else if (event.keyCode == 16)
+            keydata.shift = false;
+        else if (event.keyCode == 82)
+            keydata.reload = false;
+    }
+    mousemovefunc(event) {
+        mousedata.x += event.movementX / 1000;
+        mousedata.y += event.movementY / 1000;
+    }
+    resizefunc() {
+        let width = this.canvas.getBoundingClientRect().width;
+        let height = this.canvas.getBoundingClientRect().height;
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.setSize(width, height);
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
     }
 }
+let main;
+window.addEventListener("DOMContentLoaded",
+    function() {
+        main = new mainClass();
+    });
+
 class player {
     constructor() {
         this.reload_time = 0;
@@ -401,87 +474,9 @@ class mouse {
 let keydata = new key();
 let mousedata = new mouse();
 
-function keyupfunc(event) {
-    console.log(event);
-    if (event.keyCode == 87)
-        keydata.up = false;
-    else if (event.keyCode == 65)
-        keydata.left = false;
-    else if (event.keyCode == 83)
-        keydata.down = false;
-    else if (event.keyCode == 68)
-        keydata.right = false;
-    else if (event.keyCode == 32)
-        keydata.space = false;
-    else if (event.keyCode == 17)
-        keydata.ctrl = false;
-    else if (event.keyCode == 16)
-        keydata.shift = false;
-    else if (event.keyCode == 82)
-        keydata.reload = false;
-
-}
-
-function keydownfunc(event) {
-    if (event.keyCode == 87)
-        keydata.up = true;
-    else if (event.keyCode == 65)
-        keydata.left = true;
-    else if (event.keyCode == 83)
-        keydata.down = true;
-    else if (event.keyCode == 68)
-        keydata.right = true;
-    else if (event.keyCode == 32)
-        keydata.space = true;
-    else if (event.keyCode == 17)
-        keydata.ctrl = true;
-    else if (event.keyCode == 16)
-        keydata.shift = true;
-    else if (event.keyCode == 82)
-        keydata.reload = true;
-
-}
-
-function mouseupfunc(event) {
-    if (event.button == 0)
-        mousedata.left = false;
-    else if (event.button == 2)
-        mousedata.right = false;
-}
-
-function mousedownfunk(event) {
-    let canvas = event.target;
-    canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
-    canvas.requestPointerLock();
-
-    if (event.button == 0)
-        mousedata.left = true;
-    else if (event.button == 2)
-        mousedata.right = true;
-}
-
-function mousemovefunc(event) {
-    mousedata.x += event.movementX / 1000;
-    mousedata.y += event.movementY / 1000;
-}
-
-function eventset(canvas) {
-    canvas.addEventListener("mousedown", mousedownfunk);
-    canvas.addEventListener("mouseup", mouseupfunc);
-    addEventListener("keydown", keydownfunc);
-    addEventListener("keyup", keyupfunc);
-    addEventListener("mousemove", mousemovefunc);
-}
-
-// window.addEventListener('resize', onResize);
-
-function resize(canvas) {
-    width = canvas.getBoundingClientRect().width;
-    height = canvas.getBoundingClientRect().height;
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
+function render() {
+    main.view();
+    requestAnimationFrame(render);
 }
 
 /*メモ欄 */
