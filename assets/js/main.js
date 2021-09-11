@@ -359,18 +359,33 @@ class mainClass {
         this.renderer.render(this.scene, this.camera);
     }
     eventset() {
-        this.canvas.addEventListener("mousedown", this.mousedownfunk);
-        this.canvas.addEventListener("mouseup", this.mouseupfunc);
-        addEventListener("keydown", this.keydownfunc);
-        addEventListener("keyup", this.keyupfunc);
-        addEventListener("mousemove", this.mousemovefunc);
-        addEventListener('resize', () => this.resizefunc());
+        this.canvas.addEventListener("mousedown", this.canvasclickfunk);
+        document.addEventListener('pointerlockchange', () => this.pointerlockchangefunc());
+        document.addEventListener('resize', () => this.resizefunc());
+    }
+    canvasclickfunk(event) {
+        let canvas_target = event.target;
+        canvas_target.requestPointerLock = canvas_target.requestPointerLock || canvas_target.mozRequestPointerLock || canvas_target.webkitRequestPointerLock;
+        canvas_target.requestPointerLock();
     }
 
+    pointerlockchangefunc() {
+        if (document.pointerLockElement || document.mozPointerLockElement || document.webkitPointerLockElement) {
+            this.canvas.addEventListener("mousedown", this.mousedownfunk);
+            this.canvas.addEventListener("mouseup", this.mouseupfunc);
+            document.addEventListener("keydown", this.keydownfunc);
+            document.addEventListener("keyup", this.keyupfunc);
+            document.addEventListener("mousemove", this.mousemovefunc);
+        } else {
+            this.canvas.removeEventListener("mousedown", this.mousedownfunk);
+            this.canvas.removeEventListener("mouseup", this.mouseupfunc);
+            document.removeEventListener("keydown", this.keydownfunc);
+            document.removeEventListener("keyup", this.keyupfunc);
+            document.removeEventListener("mousemove", this.mousemovefunc);
+            console.log("解除");
+        }
+    }
     mousedownfunk(event) {
-        let canvas = event.target;
-        canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
-        canvas.requestPointerLock();
         if (event.button == 0)
             mousedata.left = true;
         else if (event.button == 2)
