@@ -127,6 +127,11 @@ class mainClass {
         */
     }
     view() {
+        let player_move = playerdata.move(this);
+        this.camera.quaternion.setFromEuler(player_move.euler);
+        this.camera.position.x = player_move.position.x;
+        this.camera.position.y = player_move.position.y;
+        this.camera.position.z = player_move.position.z;
         /*
         銃関連
         if (keydata.reload && playerdata.reload_time == 0) {
@@ -146,87 +151,6 @@ class mainClass {
         playerdata.animationReload.update(clock.getDelta());
         */
 
-        // 移動前の座標をキャッシュ
-        playerdata.cache.x = this.camera.position.x;
-        playerdata.cache.y = this.camera.position.y;
-        playerdata.cache.z = this.camera.position.z;
-        // 方向による移動量の計算
-        let _euler = new THREE.Euler(0, 0, 0, 'YXZ');
-        _euler.setFromQuaternion(this.camera.quaternion);
-        _euler.y -= mousedata.x;
-        _euler.x = Math.max(Math.PI / 2 - Math.PI, Math.min(Math.PI / 2 - 0, _euler.x - mousedata.y));
-        this.camera.quaternion.setFromEuler(_euler);
-
-        // 移動速度
-        if (keydata.shift)
-            playerdata.speed = 6;
-        else
-            playerdata.speed = 3;
-        // 移動
-        if (keydata.up && keydata.right) {
-            this.camera.position.z -= Math.cos(_euler.y - Math.PI / 2.5) * playerdata.speed;
-            this.camera.position.x -= Math.sin(_euler.y - Math.PI / 2.5) * playerdata.speed;
-        } else if (keydata.up && keydata.left) {
-            this.camera.position.z += Math.cos(_euler.y - Math.PI / 1.5) * playerdata.speed;
-            this.camera.position.x += Math.sin(_euler.y - Math.PI / 1.5) * playerdata.speed;
-        } else if (keydata.down && keydata.right) {
-            this.camera.position.z -= Math.cos(_euler.y - Math.PI / 1.5) * playerdata.speed;
-            this.camera.position.x -= Math.sin(_euler.y - Math.PI / 1.5) * playerdata.speed;
-        } else if (keydata.down && keydata.left) {
-            this.camera.position.z += Math.cos(_euler.y - Math.PI / 2.5) * playerdata.speed;
-            this.camera.position.x += Math.sin(_euler.y - Math.PI / 2.5) * playerdata.speed;
-        } else if (keydata.up) {
-            this.camera.position.z -= Math.cos(_euler.y) * playerdata.speed;
-            this.camera.position.x -= Math.sin(_euler.y) * playerdata.speed;
-        } else if (keydata.down) {
-            this.camera.position.z += Math.cos(_euler.y) * playerdata.speed;
-            this.camera.position.x += Math.sin(_euler.y) * playerdata.speed;
-        } else if (keydata.right) {
-            this.camera.position.z -= Math.cos(_euler.y - Math.PI / 2) * playerdata.speed;
-            this.camera.position.x -= Math.sin(_euler.y - Math.PI / 2) * playerdata.speed;
-        } else if (keydata.left) {
-            this.camera.position.z += Math.cos(_euler.y - Math.PI / 2) * playerdata.speed;
-            this.camera.position.x += Math.sin(_euler.y - Math.PI / 2) * playerdata.speed;
-        }
-
-        // 当たり判定 x軸
-
-
-        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
-            [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
-
-                let TopOverPos = new THREE.Vector3(this.camera.position.x + Math.abs(data_x), this.camera.position.y + data_y, this.camera.position.z + data_x);
-                let downVect = new THREE.Vector3(-1, 0, 0);
-                let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
-                let flag = false;
-                let objs = ray.intersectObjects(this.wall.children, true);
-                objs.forEach((element) => {
-                    if (this.camera.position.x < element.point.x + Math.abs(data_x))
-                        flag = true;
-                });
-                if (flag)
-                    this.camera.position.x = playerdata.cache.x;
-            });
-        });
-
-        // 当たり判定 z軸
-
-        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
-            [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
-
-                let TopOverPos = new THREE.Vector3(this.camera.position.x + data_x, this.camera.position.y + data_y, this.camera.position.z + Math.abs(data_x));
-                let downVect = new THREE.Vector3(0, 0, -1);
-                let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
-                let flag = false;
-                let objs = ray.intersectObjects(this.wall.children, true);
-                objs.forEach((element) => {
-                    if (this.camera.position.z < element.point.z + Math.abs(data_x))
-                        flag = true;
-                });
-                if (flag)
-                    this.camera.position.z = playerdata.cache.z;
-            });
-        });
 
 
         /*
@@ -242,19 +166,6 @@ class mainClass {
         }
         console.log(gun.point)
         */
-        /* 縦方向判定 */
-        let PlayerHeight = this.camera.position.y - 100;
-        let TopOverPos = new THREE.Vector3(this.camera.position.x, PlayerHeight + 20, this.camera.position.z);
-        let downVect = new THREE.Vector3(0, -1, 0);
-        let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
-        let preY = PlayerHeight - 5;
-        let objs = ray.intersectObjects(this.floor.children, true);
-        objs.forEach(function(element) {
-            if (preY < element.point.y)
-                preY = element.point.y;
-        });
-        /* 接触点 + 身長 */
-        this.camera.position.y = preY + 100;
 
         // camera.translateOnAxis(new THREE.Vector3(Number(keydata.right) - Number(keydata.left), 0, Number(keydata.down) - Number(keydata.up)), 3);
 
@@ -455,11 +366,113 @@ class player {
     constructor() {
         this.reload_time = 0;
         this.shot_time = 0;
-
         this.speed = 0;
-        this.cache = {};
+        this.position = {
+            x: 0,
+            y: 0,
+            z: 0
+        };
+        this.euler = new THREE.Euler(0, 0, 0, 'YXZ');;
     }
+    move(main) {
+        // 移動前の座標をキャッシュ
+        let cache = this.position;
+        // 方向による移動量の計算
 
+        // _euler.setFromQuaternion(main.camera.quaternion);
+        this.euler.y -= mousedata.x;
+        this.euler.x = Math.max(Math.PI / 2 - Math.PI, Math.min(Math.PI / 2 - 0, this.euler.x - mousedata.y));
+
+        // 移動速度
+        if (keydata.shift)
+            this.speed = 6;
+        else
+            this.speed = 3;
+        // 移動
+        if (keydata.up && keydata.right) {
+            this.position.z -= Math.cos(this.euler.y - Math.PI / 2.5) * this.speed;
+            this.position.x -= Math.sin(this.euler.y - Math.PI / 2.5) * this.speed;
+        } else if (keydata.up && keydata.left) {
+            this.position.z += Math.cos(this.euler.y - Math.PI / 1.5) * this.speed;
+            this.position.x += Math.sin(this.euler.y - Math.PI / 1.5) * this.speed;
+        } else if (keydata.down && keydata.right) {
+            this.position.z -= Math.cos(this.euler.y - Math.PI / 1.5) * this.speed;
+            this.position.x -= Math.sin(this.euler.y - Math.PI / 1.5) * this.speed;
+        } else if (keydata.down && keydata.left) {
+            this.position.z += Math.cos(this.euler.y - Math.PI / 2.5) * this.speed;
+            this.position.x += Math.sin(this.euler.y - Math.PI / 2.5) * this.speed;
+        } else if (keydata.up) {
+            this.position.z -= Math.cos(this.euler.y) * this.speed;
+            this.position.x -= Math.sin(this.euler.y) * this.speed;
+        } else if (keydata.down) {
+            this.position.z += Math.cos(this.euler.y) * this.speed;
+            this.position.x += Math.sin(this.euler.y) * this.speed;
+        } else if (keydata.right) {
+            this.position.z -= Math.cos(this.euler.y - Math.PI / 2) * this.speed;
+            this.position.x -= Math.sin(this.euler.y - Math.PI / 2) * this.speed;
+        } else if (keydata.left) {
+            this.position.z += Math.cos(this.euler.y - Math.PI / 2) * this.speed;
+            this.position.x += Math.sin(this.euler.y - Math.PI / 2) * this.speed;
+        }
+
+        // 当たり判定 x軸
+
+
+        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
+            [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
+
+                let TopOverPos = new THREE.Vector3(this.position.x + Math.abs(data_x), this.position.y + data_y, this.position.z + data_x);
+                let downVect = new THREE.Vector3(-1, 0, 0);
+                let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
+                let flag = false;
+                let objs = ray.intersectObjects(main.wall.children, true);
+                objs.forEach((element) => {
+                    if (this.position.x < element.point.x + Math.abs(data_x))
+                        flag = true;
+                });
+                if (flag)
+                    this.position.x = cache.x;
+            });
+        });
+
+        // 当たり判定 z軸
+
+        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
+            [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
+
+                let TopOverPos = new THREE.Vector3(this.position.x + data_x, this.position.y + data_y, this.position.z + Math.abs(data_x));
+                let downVect = new THREE.Vector3(0, 0, -1);
+                let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
+                let flag = false;
+                let objs = ray.intersectObjects(main.wall.children, true);
+                objs.forEach((element) => {
+                    if (this.position.z < element.point.z + Math.abs(data_x))
+                        flag = true;
+                });
+                if (flag)
+                    this.position.z = cache.z;
+            });
+        });
+
+        /* 縦方向判定 */
+        let PlayerHeight = main.camera.position.y - 100;
+        let TopOverPos = new THREE.Vector3(main.camera.position.x, PlayerHeight + 20, main.camera.position.z);
+        let downVect = new THREE.Vector3(0, -1, 0);
+        let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
+        let preY = PlayerHeight - 5;
+        let objs = ray.intersectObjects(main.floor.children, true);
+        objs.forEach((element) => {
+            if (preY < element.point.y)
+                preY = element.point.y;
+        });
+        /* 接触点 + 身長 */
+        this.position.y = preY + 100;
+
+        return {
+            position: this.position,
+            euler: this.euler
+        };
+    }
 }
 let playerdata = new player;
 class key {
