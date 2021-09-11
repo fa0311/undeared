@@ -382,7 +382,6 @@ class mainClass {
             document.removeEventListener("keydown", this.keydownfunc);
             document.removeEventListener("keyup", this.keyupfunc);
             document.removeEventListener("mousemove", this.mousemovefunc);
-            console.log("解除");
         }
     }
     mousedownfunk(event) {
@@ -416,7 +415,6 @@ class mainClass {
             keydata.reload = true;
     }
     keyupfunc(event) {
-        console.log(event);
         if (event.keyCode == 87)
             keydata.up = false;
         else if (event.keyCode == 65)
