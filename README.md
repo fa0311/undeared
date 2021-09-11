@@ -1,3 +1,3 @@
 # License
 
-is under MIT License
+Undeared is under MIT License
