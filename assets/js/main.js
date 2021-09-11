@@ -424,8 +424,8 @@ class mainClass {
         mousedata.y += event.movementY / 1000;
     }
     resizefunc() {
-        let width = this.canvas.getBoundingClientRect().width;
-        let height = this.canvas.getBoundingClientRect().height;
+        let width = window.innerWidth;
+        let height = window.innerHeight;
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;
