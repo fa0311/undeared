@@ -7,7 +7,8 @@ class mainClass {
         });
         this.eventset();
         this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(
@@ -455,6 +456,7 @@ class player {
         });
 
         /* 縦方向判定 */
+
         let PlayerHeight = main.camera.position.y - 100;
         let TopOverPos = new THREE.Vector3(main.camera.position.x, PlayerHeight + 20, main.camera.position.z);
         let downVect = new THREE.Vector3(0, -1, 0);

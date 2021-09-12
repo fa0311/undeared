@@ -6,6 +6,7 @@ function mapset_floor(floor) {
         color: 0xFFFFFF,
         roughness: 1
     }));
+    setshadow(box);
     box.position.set(400, -10, -575);
     floor.add(box);
 
@@ -13,7 +14,16 @@ function mapset_floor(floor) {
         color: 0xFFFFFF,
         roughness: 1
     }));
+    setshadow(box);
     box.position.set(0, -20, 0);
+    floor.add(box);
+
+    box = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), new THREE.MeshStandardMaterial({
+        color: 0xFFFFFF,
+        roughness: 1
+    }));
+    setshadow(box);
+    box.position.set(500, 200, -500);
     floor.add(box);
 
 }
@@ -87,8 +97,7 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/bookshelf/bookshelf.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(80, 80, 80);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(-30, -100, 0);
         // bookshelf.position.set(-30, 10, 0);
         corridor.add(bookshelf);
@@ -97,8 +106,7 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/window/window.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(35, -20, 70);
         bookshelf.rotation.y = 3.14
         corridor.add(bookshelf);
@@ -109,8 +117,7 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/wall/wall.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100 / 4 * 3, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(110, -20, 27);
         bookshelf.rotation.y = 3.14 / 2
         corridor.add(bookshelf);
@@ -122,8 +129,7 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/wall/wall.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100 / 4 * 3, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(-90, -20, 27);
         bookshelf.rotation.y = 3.14 / 2
         corridor.add(bookshelf);
@@ -135,17 +141,16 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/window/window.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(165, -20, -70);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
+        windowlight(corridor, bookshelf);
     });
     loader.load('assets/models/wall/wall.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(365, -20, -70);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
@@ -153,18 +158,16 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/window/window.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(565, -20, -70);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
+        windowlight(corridor, bookshelf);
     });
     loader.load('assets/models/wall/wall.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(765, -20, -70);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
@@ -175,8 +178,7 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/wall/wall.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(-35, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
@@ -185,8 +187,7 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/wall/wall.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(165, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
@@ -195,8 +196,7 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/wall/wall.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(365, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
@@ -205,8 +205,7 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/wall/wall.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(565, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
@@ -215,8 +214,7 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/wall/wall.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(765, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
@@ -227,13 +225,46 @@ function mapset_corridor(corridor) {
     loader.load('assets/models/floor/untitled.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
-        bookshelf.receiveShadow = true;
-        bookshelf.castShadow = true;
+        setshadow(bookshelf);
         bookshelf.position.set(0, 300, -80);
         bookshelf.rotation.y = 3.14;
         corridor.add(bookshelf);
     });
 
+}
+
+function setshadow(scene) {
+    scene.traverse(function(node) {
+        if (node.isMesh) {
+            node.receiveShadow = true;
+            node.castShadow = true;
+        }
+    });
+}
+
+function windowlight(mesh, scene) {
+    // const light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
+    const light = new THREE.SpotLight(0xFFFFFF, 3, 500, Math.PI / 12, 1, 0);
+    light.castShadow = true;
+    light.position.set(scene.position.x + 100, scene.position.y + 300, scene.position.z + 200);
+    light.target.position.set(scene.position.x + 30, scene.position.y + 130, scene.position.z);
+    light.shadow.mapSize.width = 2048;
+    light.shadow.mapSize.height = 2048;
+    light.shadow.camera.far = 500;
+    /*
+    light.shadow.camera.far = 500;
+    light.shadow.camera.right = 50;
+    light.shadow.camera.left = 50;
+    light.shadow.camera.top = 120;
+    light.shadow.camera.bottom = -120;
+    */
+    mesh.add(light);
+    mesh.add(light.target);
+    // デバッグ用
+    /*
+    const helper = new THREE.CameraHelper(light.shadow.camera);
+    mesh.add(helper);
+    */
 }
 /*
 const floor_list = [
