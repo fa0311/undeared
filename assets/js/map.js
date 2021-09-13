@@ -258,8 +258,18 @@ function windowlight(mesh, scene) {
     light.shadow.camera.top = 120;
     light.shadow.camera.bottom = -120;
     */
+
+    const glass = new THREE.Mesh(new THREE.BoxGeometry(85, 85, 2), new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        refractionRatio: 0.8,
+        transparent: true,
+        opacity: 0.5
+    }));
+    glass.position.set(scene.position.x + 35, scene.position.y + 120, scene.position.z - 7);
     mesh.add(light);
     mesh.add(light.target);
+    mesh.add(glass);
+
     // デバッグ用
     /*
     const helper = new THREE.CameraHelper(light.shadow.camera);
