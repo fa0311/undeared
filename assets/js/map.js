@@ -248,8 +248,8 @@ function windowlight(mesh, scene) {
     light.castShadow = true;
     light.position.set(scene.position.x + 100, scene.position.y + 300, scene.position.z + 200);
     light.target.position.set(scene.position.x + 30, scene.position.y + 130, scene.position.z);
-    light.shadow.mapSize.width = 2048;
-    light.shadow.mapSize.height = 2048;
+    light.shadow.mapSize.width = 2048 * config.quality.shadow;
+    light.shadow.mapSize.height = 2048 * config.quality.shadow;
     light.shadow.camera.far = 500;
     /*
     light.shadow.camera.far = 500;

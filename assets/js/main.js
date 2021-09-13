@@ -1,3 +1,11 @@
+var config = {
+    debug: true,
+    stats: true,
+    quality: {
+        fps: 60,
+        shadow: 1,
+    }
+}
 class mainClass {
     constructor() {
         /* 定義 */
@@ -19,20 +27,19 @@ class mainClass {
         );
         this.resizefunc();
 
-        // Stats ライブラリ
-        this.stats = new Stats();
-        this.stats.showPanel(0);
-        Object.assign(this.stats.dom.style, {
-            'position': 'fixed',
-            'height': 'max-content',
-            'left': 0,
-            'right': 'auto',
-            'top': 0,
-            'bottom': 'auto'
-        });
-        document.body.appendChild(this.stats.dom);
-
-
+        if (config.stats) {
+            this.stats = new Stats();
+            this.stats.showPanel(0);
+            Object.assign(this.stats.dom.style, {
+                'position': 'fixed',
+                'height': 'max-content',
+                'left': 0,
+                'right': 'auto',
+                'top': 0,
+                'bottom': 'auto'
+            });
+            document.body.appendChild(this.stats.dom);
+        }
         this.camera.y_speed = 0;
         this.camera.position.set(0, 100, 0);
 
@@ -401,9 +408,9 @@ class player {
 
         // 移動速度
         if (keydata.shift)
-            this.speed = 6;
+            this.speed = 6 / (config.quality.fps / 60);
         else
-            this.speed = 3;
+            this.speed = 3 / (config.quality.fps / 60);
         // 移動
         if (keydata.up && keydata.right) {
             this.position.z -= Math.cos(this.euler.y - Math.PI / 2.5) * this.speed;
@@ -517,11 +524,16 @@ class mouse {
 let keydata = new key();
 let mousedata = new mouse();
 
+
 function render() {
-    main.stats.begin();
+    if (config.stats) {
+        main.stats.begin();
+    }
+    setTimeout(render, 1000 / config.quality.fps);
     main.view();
-    requestAnimationFrame(render);
-    main.stats.end();
+    if (config.stats) {
+        main.stats.end();
+    }
 }
 
 /*メモ欄 */
