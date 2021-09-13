@@ -18,6 +18,21 @@ class mainClass {
             1000
         );
         this.resizefunc();
+
+        // Stats ライブラリ
+        this.stats = new Stats();
+        this.stats.showPanel(0);
+        Object.assign(this.stats.dom.style, {
+            'position': 'fixed',
+            'height': 'max-content',
+            'left': 0,
+            'right': 'auto',
+            'top': 0,
+            'bottom': 'auto'
+        });
+        document.body.appendChild(this.stats.dom);
+
+
         this.camera.y_speed = 0;
         this.camera.position.set(0, 100, 0);
 
@@ -503,8 +518,10 @@ let keydata = new key();
 let mousedata = new mouse();
 
 function render() {
+    main.stats.begin();
     main.view();
     requestAnimationFrame(render);
+    main.stats.end();
 }
 
 /*メモ欄 */
