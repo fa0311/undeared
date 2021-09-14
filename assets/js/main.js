@@ -42,18 +42,18 @@ class mainClass {
         this.scene.add(this.eventobj);
         // 廊下
         this.corridor = new THREE.Group();
-        mapset_corridor(this.corridor);
+        stageset_corridor(this.corridor);
         this.scene.add(this.corridor);
         // 部屋
         this.room = new THREE.Group();
         this.scene.add(this.room);
         // 当たり判定 壁
         this.wall = new THREE.Group();
-        mapset_wall(this.wall);
+        stageset_wall(this.wall);
         this.scene.add(this.wall);
         // 当たり判定 床
         this.floor = new THREE.Group();
-        mapset_floor(this.floor);
+        stageset_floor(this.floor);
         this.scene.add(this.floor);
 
 

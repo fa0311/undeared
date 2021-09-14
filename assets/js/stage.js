@@ -1,6 +1,6 @@
 var global; //デバッグ用
 
-function mapset_floor(floor) {
+function stageset_floor(floor) {
     let box;
     box = new THREE.Mesh(new THREE.BoxGeometry(1000, 20, 1000), new THREE.MeshStandardMaterial({
         color: 0xFFFFFF,
@@ -28,7 +28,7 @@ function mapset_floor(floor) {
 
 }
 
-function mapset_wall(wall) {
+function stageset_wall(wall) {
     let box;
     /*
     box = new THREE.Mesh(new THREE.BoxGeometry(1, 240, 150), new THREE.MeshStandardMaterial({
@@ -89,7 +89,7 @@ function mapset_wall(wall) {
 
 }
 
-function mapset_corridor(corridor) {
+function stageset_corridor(corridor) {
 
     {
         /*靴箱 */
