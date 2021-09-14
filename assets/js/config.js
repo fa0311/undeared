@@ -2,7 +2,7 @@ var config = {
     debug: true,
     stats: true,
     quality: {
-        fps: 600,
+        fps: 60,
         shadow: 1,
     },
     keycode: {
