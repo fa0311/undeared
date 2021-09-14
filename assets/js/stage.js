@@ -1,30 +1,39 @@
 var global; //デバッグ用
 
 function stageset_floor(floor) {
-    let box;
-    box = new THREE.Mesh(new THREE.BoxGeometry(1000, 20, 1000), new THREE.MeshStandardMaterial({
-        color: 0xFFFFFF,
-        roughness: 1
-    }));
-    setshadow(box);
-    box.position.set(400, -10, -575);
-    floor.add(box);
-
-    box = new THREE.Mesh(new THREE.BoxGeometry(200, 1, 150), new THREE.MeshStandardMaterial({
-        color: 0xFFFFFF,
-        roughness: 1
-    }));
-    setshadow(box);
-    box.position.set(0, -20, 0);
-    floor.add(box);
-
-    box = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), new THREE.MeshStandardMaterial({
-        color: 0xFFFFFF,
-        roughness: 1
-    }));
-    setshadow(box);
-    box.position.set(500, 200, -500);
-    floor.add(box);
+    {
+        const box = new THREE.Mesh(new THREE.BoxGeometry(1000, 20, 1000), new THREE.MeshStandardMaterial({
+            color: 0xFFFFFF,
+            roughness: 1
+        }));
+        setshadow(box);
+        box.position.set(400, -10, -575);
+        floor.add(box);
+    } {
+        const box = new THREE.Mesh(new THREE.BoxGeometry(1000, 20, 1000), new THREE.MeshStandardMaterial({
+            color: 0xFFFFFF,
+            roughness: 1
+        }));
+        setshadow(box);
+        box.position.set(400, 200, -575);
+        floor.add(box);
+    } {
+        const box = new THREE.Mesh(new THREE.BoxGeometry(1000, 1, 500), new THREE.MeshStandardMaterial({
+            color: 0xFFFFFF,
+            roughness: 1
+        }));
+        setshadow(box);
+        box.position.set(400, -20, 175);
+        floor.add(box);
+    } {
+        const box = new THREE.Mesh(new THREE.BoxGeometry(200, 20, 150), new THREE.MeshStandardMaterial({
+            color: 0xFFFFFF,
+            roughness: 1
+        }));
+        setshadow(box);
+        box.position.set(0, 200, 0);
+        floor.add(box);
+    }
 
 }
 
@@ -90,133 +99,163 @@ function stageset_wall(wall) {
 }
 
 function stageset_corridor(corridor) {
-
+    /*靴箱 */
     {
-        /*靴箱 */
-        bookshelf = loader.clone("bookshelf");
-        bookshelf.scale.set(80, 80, 80);
-        setshadow(bookshelf);
-        bookshelf.position.set(-30, -100, 0);
-        // bookshelf.position.set(-30, 10, 0);
-        corridor.add(bookshelf);
+        const model = loader.clone("bookshelf");
+        model.scale.set(80, 80, 80);
+        setshadow(model);
+        model.position.set(-30, -100, 0);
+        // model.position.set(-30, 10, 0);
+        corridor.add(model);
     }
     /*玄関のドア */
     {
-        bookshelf = loader.clone("window");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(35, -20, 70);
-        bookshelf.rotation.y = 3.14
-        corridor.add(bookshelf);
-
+        const model = loader.clone("window");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(35, -20, 70);
+        model.rotation.y = 3.14
+        corridor.add(model);
+    } {
+        const model = loader.clone("window");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(35, -220, 70);
+        model.rotation.y = 3.14
+        corridor.add(model);
     }
-
     /*玄関の右 */
     {
-        bookshelf = loader.clone("wall");
-        bookshelf.scale.set(100 / 4 * 3, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(110, -20, 27);
-        bookshelf.rotation.y = 3.14 / 2
-        corridor.add(bookshelf);
+        const model = loader.clone("wall");
+        model.scale.set(100 / 4 * 3, 100, 100);
+        setshadow(model);
+        model.position.set(110, -20, 27);
+        model.rotation.y = 3.14 / 2
+        corridor.add(model);
+
+    } {
+        const model = loader.clone("wall");
+        model.scale.set(100 / 4 * 3, 100, 100);
+        setshadow(model);
+        model.position.set(110, -220, 27);
+        model.rotation.y = 3.14 / 2
+        corridor.add(model);
 
     }
-
-
     /*玄関の左 */
     {
-        bookshelf = loader.clone("wall");
-        bookshelf.scale.set(100 / 4 * 3, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(-90, -20, 27);
-        bookshelf.rotation.y = 3.14 / 2
-        corridor.add(bookshelf);
+        const model = loader.clone("wall");
+        model.scale.set(100 / 4 * 3, 100, 100);
+        setshadow(model);
+        model.position.set(-90, -20, 27);
+        model.rotation.y = 3.14 / 2
+        corridor.add(model);
 
+    } {
+        const model = loader.clone("wall");
+        model.scale.set(100 / 4 * 3, 100, 100);
+        setshadow(model);
+        model.position.set(-90, -220, 27);
+        model.rotation.y = 3.14 / 2
+        corridor.add(model);
+    } {
+        const model = loader.clone("wall");
+        global = model;
+        model.scale.set(100 / 4 * 3, 100, 100);
+        setshadow(model);
+        model.position.set(-90, -20, -122);
+        model.rotation.y = 3.14 / 2
+        corridor.add(model);
     }
-
     /*入って左 */
-
     {
-        bookshelf = loader.clone("window");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(165, -20, -70);
-        bookshelf.rotation.y = 0;
-        corridor.add(bookshelf);
-        windowlight(corridor, bookshelf);
+        const model = loader.clone("window");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(165, -20, -70);
+        model.rotation.y = 0;
+        corridor.add(model);
+        windowlight(corridor, model);
     } {
-        bookshelf = loader.clone("wall");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(365, -20, -70);
-        bookshelf.rotation.y = 0;
-        corridor.add(bookshelf);
+        const model = loader.clone("wall");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(365, -20, -70);
+        model.rotation.y = 0;
+        corridor.add(model);
     } {
-        bookshelf = loader.clone("window");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(565, -20, -70);
-        bookshelf.rotation.y = 0;
-        corridor.add(bookshelf);
-        windowlight(corridor, bookshelf);
+        const model = loader.clone("window");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(565, -20, -70);
+        model.rotation.y = 0;
+        corridor.add(model);
+        windowlight(corridor, model);
     } {
-        bookshelf = loader.clone("wall");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(765, -20, -70);
-        bookshelf.rotation.y = 0;
-        corridor.add(bookshelf);
+        const model = loader.clone("wall");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(765, -20, -70);
+        model.rotation.y = 0;
+        corridor.add(model);
     }
     /*向かい側 */
-
-
     {
-        bookshelf = loader.clone("wall");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(-35, -20, -220);
-        bookshelf.rotation.y = 0;
-        corridor.add(bookshelf);
+        const model = loader.clone("wall");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(-35, -20, -220);
+        model.rotation.y = 0;
+        corridor.add(model);
     } {
-        bookshelf = loader.clone("wall");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(165, -20, -220);
-        bookshelf.rotation.y = 0;
-        corridor.add(bookshelf);
+        const model = loader.clone("wall");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(165, -20, -220);
+        model.rotation.y = 0;
+        corridor.add(model);
     } {
-        bookshelf = loader.clone("wall");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(365, -20, -220);
-        bookshelf.rotation.y = 0;
-        corridor.add(bookshelf);
+        const model = loader.clone("wall");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(365, -20, -220);
+        model.rotation.y = 0;
+        corridor.add(model);
     } {
-        bookshelf = loader.clone("wall");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(565, -20, -220);
-        bookshelf.rotation.y = 0;
-        corridor.add(bookshelf);
+        const model = loader.clone("wall");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(565, -20, -220);
+        model.rotation.y = 0;
+        corridor.add(model);
     } {
-        bookshelf = loader.clone("wall");
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(765, -20, -220);
-        bookshelf.rotation.y = 0;
-        corridor.add(bookshelf);
+        const model = loader.clone("wall");
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(765, -20, -220);
+        model.rotation.y = 0;
+        corridor.add(model);
     }
-
+    /*突き当り */
+    {
+        const model = loader.clone("wall");
+        global = model;
+        model.scale.set(100 / 4 * 3, 100, 100);
+        setshadow(model);
+        model.position.set(900, -20, -122);
+        model.rotation.y = 3.14 / 2
+        corridor.add(model);
+    }
 
     /*デバッグ用 */
     /*
     loader.load('assets/models/floor/untitled.glb', function(model) {
-        bookshelf = model.scene;
-        bookshelf.scale.set(100, 100, 100);
-        setshadow(bookshelf);
-        bookshelf.position.set(0, 300, -80);
-        bookshelf.rotation.y = 3.14;
-        corridor.add(bookshelf);
+        model = model.scene;
+        model.scale.set(100, 100, 100);
+        setshadow(model);
+        model.position.set(0, 300, -80);
+        model.rotation.y = 3.14;
+        corridor.add(model);
     });
     */
 }
@@ -232,7 +271,7 @@ function setshadow(scene) {
 
 function windowlight(mesh, scene) {
     // const light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
-    const light = new THREE.SpotLight(0xFFFFFF, 3, 500, Math.PI / 12, 1, 0);
+    const light = new THREE.SpotLight(0xFFFFFF, 1, 800, Math.PI / 12, 0, 0);
     light.castShadow = true;
     light.position.set(scene.position.x + 100, scene.position.y + 300, scene.position.z + 200);
     light.target.position.set(scene.position.x + 30, scene.position.y + 130, scene.position.z);
@@ -249,9 +288,8 @@ function windowlight(mesh, scene) {
 
     const glass = new THREE.Mesh(new THREE.BoxGeometry(85, 85, 2), new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
-        refractionRatio: 0.8,
         transparent: true,
-        opacity: 0.5
+        opacity: 0.2
     }));
     glass.position.set(scene.position.x + 35, scene.position.y + 120, scene.position.z - 7);
     mesh.add(light);
@@ -259,10 +297,11 @@ function windowlight(mesh, scene) {
     mesh.add(glass);
 
     // デバッグ用
-    /*
-    const helper = new THREE.CameraHelper(light.shadow.camera);
-    mesh.add(helper);
-    */
+    if (config.debug) {
+        const helper = new THREE.CameraHelper(light.shadow.camera);
+        mesh.add(helper);
+    }
+
 }
 /*
 const floor_list = [
