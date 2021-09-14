@@ -303,7 +303,7 @@ class mainClass {
     eventset() {
         this.canvas.addEventListener("mousedown", this.canvasclickfunk);
         document.addEventListener('pointerlockchange', () => this.pointerlockchangefunc());
-        document.addEventListener('resize', () => this.resizefunc());
+        window.addEventListener('resize', () => this.resizefunc());
     }
     canvasclickfunk(event) {
         let canvas_target = event.target;
