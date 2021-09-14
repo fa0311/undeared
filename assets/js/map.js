@@ -91,137 +91,125 @@ function mapset_wall(wall) {
 
 function mapset_corridor(corridor) {
 
-    const loader = new THREE.GLTFLoader();
-
-    /*靴箱 */
-    loader.load('assets/models/bookshelf/bookshelf.glb', function(model) {
-        bookshelf = model.scene;
+    {
+        /*靴箱 */
+        bookshelf = loader.clone("bookshelf");
         bookshelf.scale.set(80, 80, 80);
         setshadow(bookshelf);
         bookshelf.position.set(-30, -100, 0);
         // bookshelf.position.set(-30, 10, 0);
         corridor.add(bookshelf);
-    });
+    }
     /*玄関のドア */
-    loader.load('assets/models/window/window.glb', function(model) {
-        bookshelf = model.scene;
+    {
+        bookshelf = loader.clone("window");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(35, -20, 70);
         bookshelf.rotation.y = 3.14
         corridor.add(bookshelf);
 
-    });
+    }
 
     /*玄関の右 */
-    loader.load('assets/models/wall/wall.glb', function(model) {
-        bookshelf = model.scene;
+    {
+        bookshelf = loader.clone("wall");
         bookshelf.scale.set(100 / 4 * 3, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(110, -20, 27);
         bookshelf.rotation.y = 3.14 / 2
         corridor.add(bookshelf);
 
-    });
+    }
 
 
     /*玄関の左 */
-    loader.load('assets/models/wall/wall.glb', function(model) {
-        bookshelf = model.scene;
+    {
+        bookshelf = loader.clone("wall");
         bookshelf.scale.set(100 / 4 * 3, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(-90, -20, 27);
         bookshelf.rotation.y = 3.14 / 2
         corridor.add(bookshelf);
 
-    });
+    }
 
     /*入って左 */
 
-    loader.load('assets/models/window/window.glb', function(model) {
-        bookshelf = model.scene;
+    {
+        bookshelf = loader.clone("window");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(165, -20, -70);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
         windowlight(corridor, bookshelf);
-    });
-    loader.load('assets/models/wall/wall.glb', function(model) {
-        bookshelf = model.scene;
+    } {
+        bookshelf = loader.clone("wall");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(365, -20, -70);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
-    });
-    loader.load('assets/models/window/window.glb', function(model) {
-        bookshelf = model.scene;
+    } {
+        bookshelf = loader.clone("window");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(565, -20, -70);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
         windowlight(corridor, bookshelf);
-    });
-    loader.load('assets/models/wall/wall.glb', function(model) {
-        bookshelf = model.scene;
+    } {
+        bookshelf = loader.clone("wall");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(765, -20, -70);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
-    });
+    }
     /*向かい側 */
 
 
-    loader.load('assets/models/wall/wall.glb', function(model) {
-        bookshelf = model.scene;
+    {
+        bookshelf = loader.clone("wall");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(-35, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
-    });
-
-    loader.load('assets/models/wall/wall.glb', function(model) {
-        bookshelf = model.scene;
+    } {
+        bookshelf = loader.clone("wall");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(165, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
-    });
-
-    loader.load('assets/models/wall/wall.glb', function(model) {
-        bookshelf = model.scene;
+    } {
+        bookshelf = loader.clone("wall");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(365, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
-    });
-
-    loader.load('assets/models/wall/wall.glb', function(model) {
-        bookshelf = model.scene;
+    } {
+        bookshelf = loader.clone("wall");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(565, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
-    });
-
-    loader.load('assets/models/wall/wall.glb', function(model) {
-        bookshelf = model.scene;
+    } {
+        bookshelf = loader.clone("wall");
         bookshelf.scale.set(100, 100, 100);
         setshadow(bookshelf);
         bookshelf.position.set(765, -20, -220);
         bookshelf.rotation.y = 0;
         corridor.add(bookshelf);
-    });
+    }
 
 
     /*デバッグ用 */
+    /*
     loader.load('assets/models/floor/untitled.glb', function(model) {
         bookshelf = model.scene;
         bookshelf.scale.set(100, 100, 100);
@@ -230,7 +218,7 @@ function mapset_corridor(corridor) {
         bookshelf.rotation.y = 3.14;
         corridor.add(bookshelf);
     });
-
+    */
 }
 
 function setshadow(scene) {

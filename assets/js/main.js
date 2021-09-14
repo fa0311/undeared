@@ -348,11 +348,6 @@ class mainClass {
         this.camera.updateProjectionMatrix();
     }
 }
-let main;
-window.addEventListener("DOMContentLoaded",
-    function() {
-        main = new mainClass();
-    });
 
 class player {
     constructor() {
