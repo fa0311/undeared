@@ -2,8 +2,16 @@ var config = {
     debug: true,
     stats: true,
     quality: {
-        fps: 60,
+        fps: 600,
         shadow: 1,
+    },
+    keycode: {
+        "87": "up",
+        "65": "left",
+        "83": "down",
+        "68": "right",
+        "17": "space",
+        "16": "sneak",
     }
 }
 class mainClass {
@@ -157,7 +165,7 @@ class mainClass {
         this.camera.position.z = player_move.position.z;
         /*
         銃関連
-        if (keydata.reload && playerdata.reload_time == 0) {
+        if (keydata.action.reload && playerdata.reload_time == 0) {
             playerdata.reload_time = 196;
             action.play();
             action.clampWhenFinished = true;
@@ -177,7 +185,7 @@ class mainClass {
 
 
         /*
-        if (keydata.space && camera.position.y < 100)
+        if (keydata.action.space && camera.position.y < 100)
             camera.y_speed = 3;
         camera.position.y += camera.y_speed * Math.abs(camera.y_speed);
         if (Math.abs(camera.y_speed) < 1)
@@ -190,7 +198,7 @@ class mainClass {
         console.log(gun.point)
         */
 
-        // camera.translateOnAxis(new THREE.Vector3(Number(keydata.right) - Number(keydata.left), 0, Number(keydata.down) - Number(keydata.up)), 3);
+        // camera.translateOnAxis(new THREE.Vector3(Number(keydata.action.right) - Number(keydata.action.left), 0, Number(keydata.action.down) - Number(keydata.action.up)), 3);
 
         mousedata.update();
 
@@ -331,40 +339,17 @@ class mainClass {
             mousedata.right = false;
     }
     keydownfunc(event) {
-        if (event.keyCode == 87)
-            keydata.up = true;
-        else if (event.keyCode == 65)
-            keydata.left = true;
-        else if (event.keyCode == 83)
-            keydata.down = true;
-        else if (event.keyCode == 68)
-            keydata.right = true;
-        else if (event.keyCode == 32)
-            keydata.space = true;
-        else if (event.keyCode == 17)
-            keydata.ctrl = true;
-        else if (event.keyCode == 16)
-            keydata.shift = true;
-        else if (event.keyCode == 82)
-            keydata.reload = true;
+        let action = config.keycode[String(event.keyCode)];
+        console.log(action);
+        if (action === undefined)
+            return
+        keydata.action[action] = true;
     }
     keyupfunc(event) {
-        if (event.keyCode == 87)
-            keydata.up = false;
-        else if (event.keyCode == 65)
-            keydata.left = false;
-        else if (event.keyCode == 83)
-            keydata.down = false;
-        else if (event.keyCode == 68)
-            keydata.right = false;
-        else if (event.keyCode == 32)
-            keydata.space = false;
-        else if (event.keyCode == 17)
-            keydata.ctrl = false;
-        else if (event.keyCode == 16)
-            keydata.shift = false;
-        else if (event.keyCode == 82)
-            keydata.reload = false;
+        let action = config.keycode[String(event.keyCode)];
+        if (action === undefined)
+            return
+        keydata.action[action] = false;
     }
     mousemovefunc(event) {
         mousedata.x += event.movementX / 1000;
@@ -407,33 +392,33 @@ class player {
         this.euler.x = Math.max(Math.PI / 2 - Math.PI, Math.min(Math.PI / 2 - 0, this.euler.x - mousedata.y));
 
         // 移動速度
-        if (keydata.shift)
+        if (keydata.action.sneak)
             this.speed = 6 / (config.quality.fps / 60);
         else
             this.speed = 3 / (config.quality.fps / 60);
         // 移動
-        if (keydata.up && keydata.right) {
+        if (keydata.action.up && keydata.action.right) {
             this.position.z -= Math.cos(this.euler.y - Math.PI / 2.5) * this.speed;
             this.position.x -= Math.sin(this.euler.y - Math.PI / 2.5) * this.speed;
-        } else if (keydata.up && keydata.left) {
+        } else if (keydata.action.up && keydata.action.left) {
             this.position.z += Math.cos(this.euler.y - Math.PI / 1.5) * this.speed;
             this.position.x += Math.sin(this.euler.y - Math.PI / 1.5) * this.speed;
-        } else if (keydata.down && keydata.right) {
+        } else if (keydata.action.down && keydata.action.right) {
             this.position.z -= Math.cos(this.euler.y - Math.PI / 1.5) * this.speed;
             this.position.x -= Math.sin(this.euler.y - Math.PI / 1.5) * this.speed;
-        } else if (keydata.down && keydata.left) {
+        } else if (keydata.action.down && keydata.action.left) {
             this.position.z += Math.cos(this.euler.y - Math.PI / 2.5) * this.speed;
             this.position.x += Math.sin(this.euler.y - Math.PI / 2.5) * this.speed;
-        } else if (keydata.up) {
+        } else if (keydata.action.up) {
             this.position.z -= Math.cos(this.euler.y) * this.speed;
             this.position.x -= Math.sin(this.euler.y) * this.speed;
-        } else if (keydata.down) {
+        } else if (keydata.action.down) {
             this.position.z += Math.cos(this.euler.y) * this.speed;
             this.position.x += Math.sin(this.euler.y) * this.speed;
-        } else if (keydata.right) {
+        } else if (keydata.action.right) {
             this.position.z -= Math.cos(this.euler.y - Math.PI / 2) * this.speed;
             this.position.x -= Math.sin(this.euler.y - Math.PI / 2) * this.speed;
-        } else if (keydata.left) {
+        } else if (keydata.action.left) {
             this.position.z += Math.cos(this.euler.y - Math.PI / 2) * this.speed;
             this.position.x += Math.sin(this.euler.y - Math.PI / 2) * this.speed;
         }
@@ -501,12 +486,13 @@ class player {
 let playerdata = new player;
 class key {
     constructor() {
-        this.up = false;
-        this.down = false;
-        this.right = false;
-        this.left = false;
-        this.space = false;
-        this.ctrl = false;
+        this.action = {
+            "up": false,
+            "down": false,
+            "right": false,
+            "left": false,
+            "sneak": false,
+        };
     }
 }
 class mouse {
