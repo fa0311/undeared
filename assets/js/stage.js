@@ -105,62 +105,65 @@ function stageset_corridor(corridor) {
         model.scale.set(80, 80, 80);
         setshadow(model);
         model.position.set(-30, -100, 0);
-        // model.position.set(-30, 10, 0);
         corridor.add(model);
     }
     /*玄関のドア */
     {
-        const model = loader.clone("window");
-        model.scale.set(100, 100, 100);
+        const model = loader.clone("door_front");
+        model.scale.set(130, 130, 130);
         setshadow(model);
-        model.position.set(35, -20, 70);
-        model.rotation.y = 3.14
+        // model.position.set(-30, -40, 75);
+        model.position.set(48, -38, 65);
+        model.rotation.y = 3.14;
         corridor.add(model);
     } {
-        const model = loader.clone("window");
-        model.scale.set(100, 100, 100);
+        const model = loader.clone("door_frame_front");
+        model.scale.set(131, 131, 131);
         setshadow(model);
-        model.position.set(35, -220, 70);
-        model.rotation.y = 3.14
+        model.position.set(50, -40, 65);
+        model.rotation.y = 3.14;
+        corridor.add(model);
+    } {
+        const model = loader.clone("wall_front");
+        model.scale.set(100, 7, 100);
+        setshadow(model);
+        model.position.set(40, 178, 66);
+        model.rotation.y = 3.14;
         corridor.add(model);
     }
     /*玄関の右 */
     {
-        const model = loader.clone("wall");
+        const model = loader.clone("wall_front");
         model.scale.set(100 / 4 * 3, 100, 100);
         setshadow(model);
-        model.position.set(110, -20, 27);
+        model.position.set(110, -40, 27);
         model.rotation.y = 3.14 / 2
         corridor.add(model);
-
     } {
-        const model = loader.clone("wall");
-        model.scale.set(100 / 4 * 3, 100, 100);
+        const model = loader.clone("wall_front");
+        model.scale.set(100 / 4 * 3, 7, 100);
         setshadow(model);
-        model.position.set(110, -220, 27);
+        model.position.set(110, 178, 27);
         model.rotation.y = 3.14 / 2
         corridor.add(model);
-
     }
     /*玄関の左 */
     {
-        const model = loader.clone("wall");
+        const model = loader.clone("wall_front");
         model.scale.set(100 / 4 * 3, 100, 100);
         setshadow(model);
-        model.position.set(-90, -20, 27);
-        model.rotation.y = 3.14 / 2
-        corridor.add(model);
-
-    } {
-        const model = loader.clone("wall");
-        model.scale.set(100 / 4 * 3, 100, 100);
-        setshadow(model);
-        model.position.set(-90, -220, 27);
+        model.position.set(-90, -40, 27);
         model.rotation.y = 3.14 / 2
         corridor.add(model);
     } {
+        const model = loader.clone("wall_front");
+        model.scale.set(100 / 4 * 3, 7, 100);
+        setshadow(model);
+        model.position.set(-90, 178, 27);
+        model.rotation.y = 3.14 / 2
+        corridor.add(model);
+    } {
         const model = loader.clone("wall");
-        global = model;
         model.scale.set(100 / 4 * 3, 100, 100);
         setshadow(model);
         model.position.set(-90, -20, -122);
@@ -202,35 +205,35 @@ function stageset_corridor(corridor) {
     /*向かい側 */
     {
         const model = loader.clone("wall");
-        model.scale.set(100, 100, 100);
+        model.scale.set(101, 100, 100);
         setshadow(model);
         model.position.set(-35, -20, -220);
         model.rotation.y = 0;
         corridor.add(model);
     } {
         const model = loader.clone("wall");
-        model.scale.set(100, 100, 100);
+        model.scale.set(101, 100, 100);
         setshadow(model);
         model.position.set(165, -20, -220);
         model.rotation.y = 0;
         corridor.add(model);
     } {
         const model = loader.clone("wall");
-        model.scale.set(100, 100, 100);
+        model.scale.set(101, 100, 100);
         setshadow(model);
         model.position.set(365, -20, -220);
         model.rotation.y = 0;
         corridor.add(model);
     } {
         const model = loader.clone("wall");
-        model.scale.set(100, 100, 100);
+        model.scale.set(101, 100, 100);
         setshadow(model);
         model.position.set(565, -20, -220);
         model.rotation.y = 0;
         corridor.add(model);
     } {
         const model = loader.clone("wall");
-        model.scale.set(100, 100, 100);
+        model.scale.set(101, 100, 100);
         setshadow(model);
         model.position.set(765, -20, -220);
         model.rotation.y = 0;
@@ -239,7 +242,6 @@ function stageset_corridor(corridor) {
     /*突き当り */
     {
         const model = loader.clone("wall");
-        global = model;
         model.scale.set(100 / 4 * 3, 100, 100);
         setshadow(model);
         model.position.set(900, -20, -122);
@@ -278,13 +280,14 @@ function windowlight(mesh, scene) {
     light.shadow.mapSize.width = 2048 * config.quality.shadow;
     light.shadow.mapSize.height = 2048 * config.quality.shadow;
     light.shadow.camera.far = 500;
-    /*
-    light.shadow.camera.far = 500;
+
+    light.shadow.camera.top = 50;
+    light.shadow.camera.bottom = -50;
+    light.shadow.camera.left = -50;
     light.shadow.camera.right = 50;
-    light.shadow.camera.left = 50;
-    light.shadow.camera.top = 120;
-    light.shadow.camera.bottom = -120;
-    */
+    light.shadow.camera.near = 25;
+    light.shadow.bias = -0.005;
+
 
     const glass = new THREE.Mesh(new THREE.BoxGeometry(85, 85, 2), new THREE.MeshPhysicalMaterial({
         color: 0xffffff,

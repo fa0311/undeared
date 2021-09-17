@@ -128,6 +128,15 @@ class mainClass {
         this.light.castShadow = true;
         this.light.shadow.mapSize.width = 2048;
         this.light.shadow.mapSize.height = 2048;
+
+        this.light.shadow.camera.top = 170;
+        this.light.shadow.camera.bottom = -70;
+        this.light.shadow.camera.left = -150;
+        this.light.shadow.camera.right = 150;
+        this.light.shadow.camera.near = 25;
+        this.light.shadow.camera.far = 250;
+        this.light.shadow.bias = -0.005;
+
         this.scene.add(this.light);
         this.light_target = new THREE.Mesh(new THREE.BoxGeometry(0, 0, 0), new THREE.MeshStandardMaterial());
         this.scene.add(this.light_target);
