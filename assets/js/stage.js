@@ -10,7 +10,7 @@ function stageset_floor(floor) {
         box.position.set(400, -10, -575);
         floor.add(box);
     } {
-        const box = new THREE.Mesh(new THREE.BoxGeometry(1000, 20, 1000), new THREE.MeshStandardMaterial({
+        const box = new THREE.Mesh(new THREE.BoxGeometry(1000, 1, 1000), new THREE.MeshStandardMaterial({
             color: 0xFFFFFF,
             roughness: 1
         }));
@@ -26,7 +26,7 @@ function stageset_floor(floor) {
         box.position.set(400, -20, 175);
         floor.add(box);
     } {
-        const box = new THREE.Mesh(new THREE.BoxGeometry(200, 20, 150), new THREE.MeshStandardMaterial({
+        const box = new THREE.Mesh(new THREE.BoxGeometry(200, 1, 150), new THREE.MeshStandardMaterial({
             color: 0xFFFFFF,
             roughness: 1
         }));
@@ -110,7 +110,7 @@ function stageset_corridor(corridor) {
     /*玄関のドア */
     {
         const model = loader.clone("door_front");
-        model.scale.set(130, 130, 130);
+        model.scale.set(131, 131, 131);
         setshadow(model);
         // model.position.set(-30, -40, 75);
         model.position.set(48, -38, 65);
@@ -125,7 +125,7 @@ function stageset_corridor(corridor) {
         corridor.add(model);
     } {
         const model = loader.clone("wall_front");
-        model.scale.set(100, 7, 100);
+        model.scale.set(100, 10, 100);
         setshadow(model);
         model.position.set(40, 178, 66);
         model.rotation.y = 3.14;
@@ -141,7 +141,7 @@ function stageset_corridor(corridor) {
         corridor.add(model);
     } {
         const model = loader.clone("wall_front");
-        model.scale.set(100 / 4 * 3, 7, 100);
+        model.scale.set(100 / 4 * 3, 10, 100);
         setshadow(model);
         model.position.set(110, 178, 27);
         model.rotation.y = 3.14 / 2
@@ -157,7 +157,7 @@ function stageset_corridor(corridor) {
         corridor.add(model);
     } {
         const model = loader.clone("wall_front");
-        model.scale.set(100 / 4 * 3, 7, 100);
+        model.scale.set(100 / 4 * 3, 10, 100);
         setshadow(model);
         model.position.set(-90, 178, 27);
         model.rotation.y = 3.14 / 2
@@ -211,12 +211,15 @@ function stageset_corridor(corridor) {
         model.rotation.y = 0;
         corridor.add(model);
     } {
-        const model = loader.clone("wall");
+        const model = loader.clone("door_frame");
         model.scale.set(101, 100, 100);
         setshadow(model);
         model.position.set(165, -20, -220);
         model.rotation.y = 0;
         corridor.add(model);
+        const door = loader.clone("door_room");
+        setdoor(door, model);
+        corridor.add(door);
     } {
         const model = loader.clone("wall");
         model.scale.set(101, 100, 100);
@@ -225,12 +228,15 @@ function stageset_corridor(corridor) {
         model.rotation.y = 0;
         corridor.add(model);
     } {
-        const model = loader.clone("wall");
+        const model = loader.clone("door_frame");
         model.scale.set(101, 100, 100);
         setshadow(model);
         model.position.set(565, -20, -220);
         model.rotation.y = 0;
         corridor.add(model);
+        const door = loader.clone("door_room");
+        setdoor(door, model);
+        corridor.add(door);
     } {
         const model = loader.clone("wall");
         model.scale.set(101, 100, 100);
@@ -271,6 +277,18 @@ function setshadow(scene) {
     });
 }
 
+function setdoor(door, scene) {
+    console.log(door);
+    setshadow(door);
+    door.scale.set(100, 100, 100);
+    door.position.set(scene.position.x, scene.position.y, scene.position.z);
+    global = [0.075, 0.075];
+    setInterval(function() {
+        door.rotation.y += 3.14 / 256;
+        door.translateOnAxis(new THREE.Vector3(0.075, 0, 0.075), 1);
+    }, 1000 / 60);
+}
+
 function windowlight(mesh, scene) {
     // const light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
     const light = new THREE.SpotLight(0xFFFFFF, 1, 800, Math.PI / 12, 0, 0);
@@ -281,11 +299,12 @@ function windowlight(mesh, scene) {
     light.shadow.mapSize.height = 2048 * config.quality.shadow;
     light.shadow.camera.far = 500;
 
-    light.shadow.camera.top = 50;
-    light.shadow.camera.bottom = -50;
-    light.shadow.camera.left = -50;
-    light.shadow.camera.right = 50;
-    light.shadow.camera.near = 25;
+    light.shadow.camera.top = 20;
+    light.shadow.camera.bottom = -20;
+    light.shadow.camera.left = -20;
+    light.shadow.camera.right = 20;
+
+    light.shadow.camera.near = 130;
     light.shadow.bias = -0.005;
 
 

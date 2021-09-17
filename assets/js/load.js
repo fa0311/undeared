@@ -15,6 +15,7 @@ class loaderClass {
             "door_frame": "assets/models/door/door_frame.glb",
             "door_frame_front": "assets/models/door/door_frame_front.glb",
             "door_front": "assets/models/door/door_front.glb",
+            "door_room": "assets/models/door/door_room.glb",
         };
         this.loaded = 0;
         this.len = Object.keys(modelpath).length;
