@@ -16,6 +16,7 @@ class loaderClass {
             "door_frame_front": "assets/models/door/door_frame_front.glb",
             "door_front": "assets/models/door/door_front.glb",
             "door_room": "assets/models/door/door_room.glb",
+            "untitled": "assets/models/window/untitled.glb",
         };
         this.loaded = 0;
         this.len = Object.keys(modelpath).length;
@@ -43,6 +44,8 @@ class loaderClass {
             this.loadedfn();
     }
     clone(name) {
-        return this.models[name].scene.clone();
+        let clone = this.models[name].scene.clone();
+        clone.name = name;
+        return clone;
     }
 }

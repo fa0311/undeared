@@ -12,5 +12,6 @@ var config = {
         "68": "right",
         "17": "space",
         "16": "sneak",
+        "69": "instruct",
     }
 }

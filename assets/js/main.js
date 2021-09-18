@@ -40,21 +40,13 @@ class mainClass {
         this.scene.add(this.bullet);
         this.eventobj = new THREE.Group();
         this.scene.add(this.eventobj);
-        // 廊下
-        this.corridor = new THREE.Group();
-        stageset_corridor(this.corridor);
-        this.scene.add(this.corridor);
-        // 部屋
-        this.room = new THREE.Group();
-        this.scene.add(this.room);
-        // 当たり判定 壁
-        this.wall = new THREE.Group();
-        stageset_wall(this.wall);
-        this.scene.add(this.wall);
-        // 当たり判定 床
-        this.floor = new THREE.Group();
-        stageset_floor(this.floor);
-        this.scene.add(this.floor);
+        this.group = {};
+        Object.keys(setstage.group).forEach(name => {
+            this.group[name] = new THREE.Group();
+            setstage.group[name](this.group[name]);
+            this.scene.add(this.group[name]);
+        });
+
 
 
         /*
@@ -141,6 +133,7 @@ class mainClass {
         this.light_target = new THREE.Mesh(new THREE.BoxGeometry(0, 0, 0), new THREE.MeshStandardMaterial());
         this.scene.add(this.light_target);
         this.light.target = this.light_target;
+
 
         setTimeout(render, 1000);
         /*
@@ -308,7 +301,11 @@ class player {
     }
     move(main) {
         // 移動前の座標をキャッシュ
-        let cache = this.position;
+        let cache = {
+            x: this.position.x,
+            y: this.position.y,
+            z: this.position.z,
+        };
         // 方向による移動量の計算
 
         // _euler.setFromQuaternion(main.camera.quaternion);
@@ -347,59 +344,99 @@ class player {
             this.position.x += Math.sin(this.euler.y - Math.PI / 2) * this.speed;
         }
 
+        cache = {
+            x: this.position.x,
+            y: this.position.y,
+            z: this.position.z,
+        };
         // 当たり判定 x軸
-
-
-        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
-            [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
-
-                let TopOverPos = new THREE.Vector3(this.position.x + Math.abs(data_x), this.position.y + data_y, this.position.z + data_x);
-                let downVect = new THREE.Vector3(-1, 0, 0);
-                let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
-                let flag = false;
-                let objs = ray.intersectObjects(main.wall.children, true);
-                objs.forEach((element) => {
-                    if (this.position.x < element.point.x + Math.abs(data_x))
-                        flag = true;
+        {
+            let flag = false;
+            [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
+                [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
+                    let TopOverPos = new THREE.Vector3(this.position.x + Math.abs(data_x), this.position.y + data_y, this.position.z + data_x);
+                    let downVect = new THREE.Vector3(-1, 0, 0);
+                    let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
+                    let objs = ray.intersectObjects(main.group.floor.children, true);
+                    objs.forEach((element) => {
+                        if (this.position.x < element.point.x + Math.abs(data_x))
+                            flag = true;
+                    });
                 });
-                if (flag)
-                    this.position.x = cache.x;
             });
-        });
+            if (flag)
+                this.position.x = cache.x;
+        }
 
         // 当たり判定 z軸
-
-        [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
-            [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
-
-                let TopOverPos = new THREE.Vector3(this.position.x + data_x, this.position.y + data_y, this.position.z + Math.abs(data_x));
-                let downVect = new THREE.Vector3(0, 0, -1);
-                let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
-                let flag = false;
-                let objs = ray.intersectObjects(main.wall.children, true);
-                objs.forEach((element) => {
-                    if (this.position.z < element.point.z + Math.abs(data_x))
-                        flag = true;
+        {
+            let flag = false;
+            [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].forEach((data_y) => {
+                [30, 20, 10, 0, -10, -20, -30].forEach((data_x) => {
+                    let TopOverPos = new THREE.Vector3(this.position.x + data_x, this.position.y + data_y, this.position.z + Math.abs(data_x));
+                    let downVect = new THREE.Vector3(0, 0, -1);
+                    let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
+                    let objs = ray.intersectObjects(main.group.floor.children, true);
+                    objs.forEach((element) => {
+                        if (this.position.z < element.point.z + Math.abs(data_x))
+                            flag = true;
+                    });
                 });
-                if (flag)
-                    this.position.z = cache.z;
             });
-        });
+            if (flag)
+                this.position.z = cache.z;
+        }
 
-        /* 縦方向判定 */
+        // 当たり判定 y軸
+        {
+            let PlayerHeight = main.camera.position.y - 120;
+            let TopOverPos = new THREE.Vector3(main.camera.position.x, PlayerHeight + 30, main.camera.position.z);
+            let downVect = new THREE.Vector3(0, -1, 0);
+            let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
+            let preY = PlayerHeight - 0;
+            let objs = ray.intersectObjects(main.group.floor.children, true);
+            objs.forEach((element) => {
+                if (preY < element.point.y)
+                    preY = element.point.y;
+            });
+            /* 接触点 + 身長 */
+            this.position.y = preY + 120;
+        }
 
-        let PlayerHeight = main.camera.position.y - 100;
-        let TopOverPos = new THREE.Vector3(main.camera.position.x, PlayerHeight + 20, main.camera.position.z);
-        let downVect = new THREE.Vector3(0, -1, 0);
-        let ray = new THREE.Raycaster(TopOverPos, downVect.normalize());
-        let preY = PlayerHeight - 5;
-        let objs = ray.intersectObjects(main.floor.children, true);
-        objs.forEach((element) => {
-            if (preY < element.point.y)
-                preY = element.point.y;
-        });
-        /* 接触点 + 身長 */
-        this.position.y = preY + 100;
+
+        /*インタラクト  */
+        {
+
+            const raycaster_for_collision = new THREE.Raycaster();
+            let dir_forward = new THREE.Vector3(0, 0, -1)
+                .applyAxisAngle(new THREE.Vector3(1, 0, 0), main.camera.rotation.x)
+                .applyAxisAngle(new THREE.Vector3(0, 1, 0), main.camera.rotation.y)
+                .applyAxisAngle(new THREE.Vector3(0, 0, 1), main.camera.rotation.z);
+            raycaster_for_collision.set(main.camera.position, dir_forward);
+            let intersects = raycaster_for_collision.intersectObjects(main.scene.children, true);
+            if (intersects.length > 0) {
+                if (keydata.action.instruct)
+                    if (intersects[0].object.parent.$_fn !== undefined) {
+                        intersects[0].object.parent.$_fn();
+                    }
+            }
+
+
+
+
+
+
+            /*
+                        let player = new THREE.Vector3(main.camera.position.x, main.camera.position.y, main.camera.position.z);
+                        let player2 = new THREE.Vector3(main.camera.position.x, main.camera.position.y, main.camera.position.z);
+                        var axis = new THREE.Vector3(1, 0, 0);
+                        console.log(new THREE.Raycaster(player2, player));
+                    */
+        }
+        /*
+        door.rotation.y += 3.14 / 256;
+        door.translateOnAxis(new THREE.Vector3(0.075, 0, 0.075), 1);
+        */
 
         return {
             position: this.position,

@@ -42,7 +42,7 @@ class EventListener {
     }
     keydownfunc(event) {
         let action = config.keycode[String(event.keyCode)];
-        console.log(action);
+        console.log(event.keyCode);
         if (action === undefined)
             return
         keydata.action[action] = true;
