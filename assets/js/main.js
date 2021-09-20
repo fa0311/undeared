@@ -114,7 +114,7 @@ class mainClass {
         });
         */
 
-        this.light = new THREE.SpotLight(0xFFFFFF, 0.5, 400, Math.PI / 5, 0.5, 0.99);
+        this.light = new THREE.SpotLight(0xFFFFFF, 0.5, 800, Math.PI / 5, 0.5, 0.99);
         //                      SpotLight(色      強度, 距離, 角度      ,半影,減衰）
         // const light = new THREE.SpotLight(0xFFFFFF, 1, 600, Math.PI, 10, 0.9);
         this.light.castShadow = true;

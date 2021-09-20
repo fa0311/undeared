@@ -299,8 +299,10 @@ var setstage = {
                 model.position.set(0, 0, 0);
                 scene.add(model);
                 console.log(model);
-                windowlight2(model.children[1]);
-                windowlight2(model.children[2]);
+                model.children.forEach(function(mesh) {
+                    if (["ガラス1", "ガラス2"].includes(mesh.name))
+                        windowlight2(mesh);
+                });
             }
 
         },
@@ -331,7 +333,7 @@ function windowlight2(mesh) {
     light.target.position.set(mesh.position.x * 100, mesh.position.y * 100, mesh.position.z * 100);
     light.shadow.mapSize.width = 2048 * config.quality.shadow;
     light.shadow.mapSize.height = 2048 * config.quality.shadow;
-    light.shadow.camera.far = 1000;
+    light.shadow.camera.far = 10000;
 
     light.shadow.camera.top = 20;
     light.shadow.camera.bottom = -20;
@@ -341,7 +343,7 @@ function windowlight2(mesh) {
     light.shadow.camera.near = 130;
     light.shadow.bias = -0.005;
 
-
+    console.log(mesh);
     mesh.material.opacity = 0.2;
     mesh.material.transparent = true;
 
@@ -360,8 +362,6 @@ function windowlight2(mesh) {
         const helper = new THREE.CameraHelper(light.shadow.camera);
         mesh.parent.parent.add(helper);
     }
-    console.log(mesh.parent);
-
 }
 
 function windowlight(mesh, scene) {
