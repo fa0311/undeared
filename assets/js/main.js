@@ -3,7 +3,8 @@ class mainClass {
         /* 定義 */
         this.canvas = document.querySelector("#canvas");
         this.renderer = new THREE.WebGLRenderer({
-            canvas: this.canvas
+            canvas: this.canvas,
+            antialias: true
         });
         this.renderer.shadowMap.enabled = true;
 
